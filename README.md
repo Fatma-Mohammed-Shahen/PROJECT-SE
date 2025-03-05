@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# PROJECT-SE
-=======
 # Online Event Ticketing System
 
 This is a full-stack web application that allows users to browse, book, and manage event tickets. The system includes different user roles: Standard User, Event Organizer, and System Admin.
@@ -20,4 +17,3 @@ This is a full-stack web application that allows users to browse, book, and mana
 1. Clone the repository:  
    ```bash
    git clone https://github.com/Fatma-Mohammed-Shahen/PROJECT SE.git
->>>>>>> d1b6c86b2dfdeb14cb65d96b216bec2ac41603d7
