@@ -1,4 +1,4 @@
-const Event = require('../models/eventModel');
+const Event = require('../models/event');
 
 // Public - View all events
 exports.getAllEvents = async (req, res) => {
