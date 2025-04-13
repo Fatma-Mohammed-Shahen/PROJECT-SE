@@ -10,7 +10,7 @@ router.put("/users/profile", authenticate, userController.updateProfile);
 
 // Admin-only route example
 router.get("/users", authenticate, authorize(["admin"]), async (req, res) => {
-  const users = await require("../models/user").find();
+  const users = await require("../models/User").find();
   res.json(users);
 });
 
