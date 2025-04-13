@@ -4,6 +4,7 @@
   "description": "This is a full-stack web application that allows users to browse, book, and manage event tickets. The system includes different user roles: Standard User, Event Organizer, and System Admin.",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
