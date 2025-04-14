@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const Booking = require("../models/booking"); 
+const Booking = require("../models/Booking"); 
 const Event = require("../models/event");
 
 // Helper: generate JWT
