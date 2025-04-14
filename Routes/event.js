@@ -1,16 +1,27 @@
+
 const express = require('express');
 const router = express.Router();
 const eventController = require('../Controllers/EventController');
-const { protect } = require('../Middleware/authenticationMiddleware');
-const { authorizeRoles } = require('../Middleware/authorizationMiddleware');
+const authenticate = require("../Middleware/authenticationMiddleware");
+const authorize = require("../Middleware/authorizationMiddleware");
 
-// Public route
-router.get('/', eventController.getAllEvents);
+
+// Public route: Any user can access this
+router.get("/events", eventController.getAllEvents);
 
 // Protected routes
-router.get('/:id', protect, eventController.getEventById);
-router.post('/', protect, authorizeRoles('organizer'), eventController.createEvent);
-router.put('/:id', protect, authorizeRoles('organizer'), eventController.updateEvent);
-router.delete('/:id', protect, authorizeRoles('organizer', 'admin'), eventController.deleteEvent);
+// Only authenticated users can access the event details
+router.get("/events/:id", authenticate, eventController.getEventById);
 
-module.exports = router;
+// Only event organizers can create events
+router.post("/events", authenticate, authorize(["organizer"]), eventController.createEvent);
+
+// Only event organizers can update their own events
+router.put("/events/:id", authenticate, authorize(["organizer"]), eventController.updateEvent);
+
+// Only event organizers and admins can delete an event
+router.delete("/events/:id", authenticate, authorize(["organizer", "admin"]), eventController.deleteEvent);
+
+module.exports = router;
+
+
