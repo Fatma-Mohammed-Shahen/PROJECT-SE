@@ -2,7 +2,7 @@ const Event = require('../models/event');
 
 // Public - View all events
 exports.getAllEvents = async (req, res) => {
-    const events = await Event.find({ status: 'approved' });
+    const events = await Event.find();
     res.json(events);
 };
 
@@ -38,7 +38,10 @@ exports.updateEvent = async (req, res) => {
 
     if (!event) return res.status(404).json({ message: "Event not found" });
 
-    if (req.user.role !== 'admin' && req.user._id.toString() !== event.createdBy.toString()) {
+    console.log('req.user:', req.user); // Log user info
+    console.log('event.createdBy:', event.createdBy); // Log event creator info
+
+    if (req.user.role !== 'admin' && req.user.role !== 'organizer') {
         return res.status(403).json({ message: "Access denied" });
     }
 
@@ -58,13 +61,19 @@ exports.deleteEvent = async (req, res) => {
     const event = await Event.findById(req.params.id);
     if (!event) return res.status(404).json({ message: "Event not found" });
 
-    if (req.user.role !== 'admin' && req.user._id.toString() !== event.createdBy.toString()) {
-        return res.status(403).json({ message: "Access denied" });
+    // Log for debugging
+    console.log('req.user:', req.user);  // To make sure req.user is properly populated
+
+    // Check if the user is an admin or an organizer
+    if (req.user.role !== 'admin' && req.user.role !== 'organizer') {
+        return res.status(403).json({ message: "Access denied: You must be an admin or organizer" });
     }
 
+    // Proceed with deletion
     await event.deleteOne();
-    res.json({ message: "Event deleted" });
+    res.json({ message: "Event deleted successfully" });
 };
+
 
 // Admin - Approve or decline event
 exports.updateEventStatus = async (req, res) => {
