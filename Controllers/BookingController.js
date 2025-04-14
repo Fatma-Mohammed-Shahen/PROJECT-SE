@@ -1,4 +1,4 @@
-const Booking = require("../models/Booking");
+const Booking = require("../models/booking");
 const Event = require("../models/event");
 
 const bookingController = {
@@ -76,6 +76,7 @@ const bookingController = {
       res.status(500).json({ message: err.message });
     }
   },
+  
 };
 
 module.exports = bookingController;

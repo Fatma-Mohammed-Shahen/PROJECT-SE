@@ -5,19 +5,19 @@ const authenticationMiddleware = require("../Middleware/authenticationMiddleware
 const authorizationMiddleware = require("../Middleware/authorizationMiddleware");
 
 // Get current user’s bookings
-router.get("/users/bookings",authenticationMiddleware,authorizationMiddleware(["standard"]),bookingController.getUserBookings
+router.get("/users/bookings",authenticationMiddleware,authorizationMiddleware(["user"]),bookingController.getUserBookings
 );
 
 //Book tickets for an event
-router.post("/bookings",authenticationMiddleware,authorizationMiddleware(["standard"]),bookingController.createBooking
+router.post("/bookings",authenticationMiddleware,authorizationMiddleware(["user"]),bookingController.createBooking
 );
 
 //Get booking details by ID
-router.get("/bookings/:id",authenticationMiddleware,authorizationMiddleware(["standard"]),bookingController.getBookingById
+router.get("/bookings/:id",authenticationMiddleware,authorizationMiddleware(["user"]),bookingController.getBookingById
 );
 
 // Cancel a booking
-router.delete("/bookings/:id",authenticationMiddleware,authorizationMiddleware(["standard"]),bookingController.cancelBooking
+router.delete("/bookings/:id",authenticationMiddleware,authorizationMiddleware(["user"]),bookingController.cancelBooking
 );
 
 module.exports = router;

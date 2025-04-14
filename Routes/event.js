@@ -1,10 +1,8 @@
-
 const express = require('express');
 const router = express.Router();
 const eventController = require('../Controllers/EventController');
 const authenticate = require("../Middleware/authenticationMiddleware");
 const authorize = require("../Middleware/authorizationMiddleware");
-
 
 // Public route: Any user can access this
 router.get("/events", eventController.getAllEvents);
@@ -22,6 +20,4 @@ router.put("/events/:id", authenticate, authorize(["organizer"]), eventControlle
 // Only event organizers and admins can delete an event
 router.delete("/events/:id", authenticate, authorize(["organizer", "admin"]), eventController.deleteEvent);
 
-module.exports = router;
-
-
+module.exports = router;
