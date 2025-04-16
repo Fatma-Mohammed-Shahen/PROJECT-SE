@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
     profilePicture: { type: String },
     password: { type: String, required: true },
     role: { type: String,
-    enum: ['Standard', 'Organizer', 'Admin'], required: true },
+    enum: ['admin', 'organizer', 'user'], required: true },
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);

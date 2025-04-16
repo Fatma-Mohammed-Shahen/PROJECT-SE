@@ -4,8 +4,8 @@
   "description": "This is a full-stack web application that allows users to browse, book, and manage event tickets. The system includes different user roles: Standard User, Event Organizer, and System Admin.",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
-    
   },
   "repository": {
     "type": "git",
@@ -17,5 +17,17 @@
   "bugs": {
     "url": "https://github.com/Fatma-Mohammed-Shahen/PROJECT-SE/issues"
   },
-  "homepage": "https://github.com/Fatma-Mohammed-Shahen/PROJECT-SE#readme"
+  "homepage": "https://github.com/Fatma-Mohammed-Shahen/PROJECT-SE#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.13.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
 }
