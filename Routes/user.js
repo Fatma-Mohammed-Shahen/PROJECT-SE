@@ -7,8 +7,10 @@ const authorize = require("../Middleware/authorizationMiddleware");
 // User Profile Routes (Any role)
 router.get("/users/profile", authenticate, userController.getProfile);
 router.put("/users/profile", authenticate, userController.updateProfile);
-router.put("/forgetPassword", userController.forgetPassword);
 router.get("/users/bookings", authenticate, userController.getUserBookings);
+router.put("/forgetPassword", userController.forgetPassword);
+//bonus
+router.put("/resetPasswordWithOtp", userController.resetPasswordWithOtp); // Reset password with OTP
 
 //event organizer
 router.get("/users/events", authenticate, userController.getUserEvents);
