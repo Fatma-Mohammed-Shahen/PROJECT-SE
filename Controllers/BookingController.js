@@ -15,39 +15,57 @@ const bookingController = {
   },
 
   // Authenticated standard users can book tickets of an event
-  createBooking : async (req, res) => {
-    try {
-      const { eventId, ticketsBooked } = req.body;
-      const event = await Event.findById(eventId);
-  
-      if (!event || event.status !== "approved") {
-        return res.status(404).json({ message: "Event not found or not approved" });
-      }
-  
-      if (event.remaining_tickets < ticketsBooked) {
-        return res.status(400).json({ message: "Not enough tickets available" });
-      }
-  
-      event.remaining_tickets -= ticketsBooked;
-      await event.save();
-  
-      const totalPrice = event.ticket_price * ticketsBooked;
-  
-      const booking = new Booking({
-        user: req.user.id, // or _id depending on your decoded token
-        event: eventId,
-        ticketsBooked,
-        totalPrice,
-        status: "confirmed"
-      });
-  
-      const savedBooking = await booking.save();
-  
-      res.status(201).json({ message: "Booking successful", booking: savedBooking });
-    } catch (err) {
-      res.status(500).json({ message: err.message });
+ createBooking: async (req, res) => {
+  try {
+    const { eventId, ticketsBooked } = req.body;
+    const event = await Event.findById(eventId);
+    
+    if (!event || event.status !== "approved") {
+      return res.status(404).json({ message: "Event not found or not approved" });
     }
-  },
+    
+    if (event.remaining_tickets < ticketsBooked) {
+      return res.status(400).json({ message: "Not enough tickets available" });
+    }
+    
+    // Check if ticket_price is a valid number
+    if (typeof event.ticket_price !== "number" || isNaN(event.ticket_price)) {
+      return res.status(400).json({ message: "Event price is missing or invalid" });
+    }
+
+    // Check if ticketsBooked is a valid number
+    if (typeof ticketsBooked !== "number" || isNaN(ticketsBooked)) {
+      return res.status(400).json({ message: "Invalid number of tickets booked" });
+    }
+
+    // Calculate the total price
+    const totalPrice = event.ticket_price * ticketsBooked;
+
+    // Check if totalPrice is a valid number
+    if (isNaN(totalPrice)) {
+      return res.status(400).json({ message: "Failed to calculate total price" });
+    }
+
+    // Update remaining tickets and save event
+    event.remaining_tickets -= ticketsBooked;
+    await event.save();
+
+    const booking = new Booking({
+      user: req.user.id, // or _id depending on your decoded token
+      event: eventId,
+      ticketsBooked,
+      totalPrice,
+      status: "confirmed"
+    });
+
+    const savedBooking = await booking.save();
+
+    res.status(201).json({ message: "Booking successful", booking: savedBooking });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+},
+
 
   // View booking by ID - EXTRA
   getBookingById : async (req, res) => {
