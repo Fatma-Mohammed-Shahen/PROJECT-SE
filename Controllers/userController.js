@@ -24,7 +24,7 @@ const authController = {
       const { name, email, password, role } = req.body;
 
       // Check if user exists
-      const existingUser = await userModel.findOne({ email });
+      const existingUser = await User.findOne({ email });
       if (existingUser) {
         return res.status(400).json({ message: "User already exists" });
       }
@@ -33,7 +33,7 @@ const authController = {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       // Create user
-      const newUser = await userModel.create({
+      const newUser = await User.create({
         name,
         email,
         password: hashedPassword,
@@ -69,7 +69,7 @@ const authController = {
       const { email, password } = req.body;
 
       // Find user
-      const user = await userModel.findOne({ email });
+      const user = await User.findOne({ email });
       if (!user) {
         return res.status(400).json({ message: "Invalid credentials" });
       }
@@ -116,7 +116,7 @@ const authController = {
     }
 
     try {
-      const user = await userModel.findOne({ email });
+      const user = await User.findOne({ email });
       if (!user) return res.status(404).json({ message: "User not found" });
 
       const otp = crypto.randomBytes(3).toString('hex');
@@ -145,7 +145,7 @@ const authController = {
     }
 
     try {
-      const user = await userModel.findOne({ email });
+      const user = await User.findOne({ email });
       if (!user) return res.status(404).json({ message: "User not found" });
 
       if (!user.otp || user.otpExpires < Date.now()) {
@@ -194,7 +194,7 @@ const usersController = {
   // @desc    Get user profile
   getProfile: async (req, res) => {
     try {
-      const user = await userModel.findById(req.user.userId).select("-password"); // assuming req.user.userId from JWT
+      const user = await User.findById(req.user.id).select("-password"); // assuming req.user.id from JWT
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
@@ -213,8 +213,8 @@ const usersController = {
         updates.password = await bcrypt.hash(updates.password, 10);
       }
 
-      const updatedUser = await userModel.findByIdAndUpdate(
-        req.user.userId,
+      const updatedUser = await User.findByIdAndUpdate(
+        req.user.id,
         updates,
         { new: true }
       ).select("-password");
@@ -241,7 +241,7 @@ const adminController = {
 // @desc    Get all users (Admin only)
   getAllUsers: async (req, res) => {
     try {
-      const users = await userModel.find().select("-password");
+      const users = await User.find().select("-password");
       res.status(200).json(users);
     } catch (err) {
       res.status(500).json({ message: "Failed to fetch users", error: err.message });
@@ -250,7 +250,7 @@ const adminController = {
 // @desc    Get user by ID (Admin only)
   getUserById: async (req, res) => {
     try {
-      const user = await userModel.findById(req.params.id).select("-password");
+      const user = await User.findById(req.params.id).select("-password");
 
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -270,7 +270,7 @@ const adminController = {
         return res.status(400).json({ message: "Invalid role" });
       }
 
-      const user = await userModel.findByIdAndUpdate(
+      const user = await User.findByIdAndUpdate(
         req.params.id,
         { role },
         { new: true }
@@ -289,12 +289,12 @@ const adminController = {
 
   deleteUser: async (req, res) => {
     try {
-      const userToDelete = await userModel.findById(req.params.id);
+      const userToDelete = await User.findById(req.params.id);
       if (!userToDelete) {
         return res.status(404).json({ message: "User not found" });
       }
 
-      await userModel.findByIdAndDelete(req.params.id);
+      await User.findByIdAndDelete(req.params.id);
       return res.status(200).json({
         msg: "User deleted successfully",
         user: userToDelete,
@@ -318,8 +318,11 @@ const organizerController = {
         return res.status(403).json({ message: "Forbidden: Only Event Organizers can access events" });
       }
 
-      // Fetch the events based on the userId
-      const events = await Event.find({ organizer: userId });
+      // Ensure userId is a valid ObjectId
+      const objectId = mongoose.Types.ObjectId(userId);  // Convert to ObjectId
+
+      // Fetch the events based on the organizer's ID
+      const events = await Event.find({ organizer: objectId });
 
       if (!events || events.length === 0) {
         return res.status(404).json({ message: "No events found for this organizer" });
@@ -332,8 +335,7 @@ const organizerController = {
     } catch (error) {
       return res.status(500).json({ message: "Error fetching events", error: error.message });
     }
-  },
-
+  }
 };
 
 module.exports = {
