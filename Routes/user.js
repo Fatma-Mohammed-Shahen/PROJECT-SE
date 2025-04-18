@@ -8,13 +8,17 @@ const authorize = require("../Middleware/authorizationMiddleware");
 router.get("/users/profile", authenticate, userController.getProfile);
 router.put("/users/profile", authenticate, userController.updateProfile);
 router.put("/forgetPassword", userController.forgetPassword);
+//bonus
+router.put("/resetPasswordWithOtp", userController.resetPasswordWithOtp); // Reset password with OTP
 
 
 // Admin-only route example
-router.get("/users", authenticate, authorize(["admin"]), async (req, res) => {
-  const users = await require("../models/user").find();
-  res.json(users);
-});
+router.get("/users", authenticate, authorize(["admin"]), userController.getAllUsers);
 router.get("/users/:id", authenticate, authorize(["admin"]), userController.getUserById);
+router.put("/users/:id", authenticate, authorize(["admin"]), userController.updateUserRole);
+router.delete("/users/:id", authenticate, authorize(["admin"]), userController.deleteUser);
+
+//event organizer
+router.get("/users/events", authenticate, userController.getUserEvents);
 
 module.exports = router;
