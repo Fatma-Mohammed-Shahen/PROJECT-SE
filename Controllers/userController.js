@@ -318,11 +318,10 @@ const organizerController = {
         return res.status(403).json({ message: "Forbidden: Only Event Organizers can access events" });
       }
 
-      // Ensure userId is a valid ObjectId
-      const objectId = mongoose.Types.ObjectId(userId);  // Convert to ObjectId
+
 
       // Fetch the events based on the organizer's ID
-      const events = await Event.find({ organizer: objectId });
+      const events = await Event.find({ organizer: userId });
 
       if (!events || events.length === 0) {
         return res.status(404).json({ message: "No events found for this organizer" });
@@ -337,11 +336,30 @@ const organizerController = {
     }
   }
 };
+const getUserBookings = async (req, res) => {
+  try {
+    const userId = req.user.id; // Get user ID from the authenticated user's token
 
+    // Fetch bookings based on userId (you can adjust this according to how bookings are stored)
+    const bookings = await Booking.find({ user: userId });
+
+    if (!bookings || bookings.length === 0) {
+      return res.status(404).json({ message: "No bookings found for this user" });
+    }
+
+    return res.status(200).json({
+      message: "Bookings retrieved successfully",
+      bookings: bookings,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Error fetching bookings", error: error.message });
+  }
+};
 module.exports = {
   ...authController,
   ...usersController,
   ...adminController,
-  ...organizerController
+  ...organizerController,
+  getUserBookings,
 };
 

@@ -41,7 +41,7 @@ const updateEvent = async (req, res) => {
     const event = await Event.findById(req.params.id);
     if (!event) return res.status(404).json({ message: 'Event not found' });
 
-    if (event.organizer.toString() !== req.user.id && req.user.role !== 'admin') {
+    if (req.user.role !== 'organizer' && req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
@@ -68,7 +68,7 @@ const deleteEvent = async (req, res) => {
     const event = await Event.findById(req.params.id);
     if (!event) return res.status(404).json({ message: 'Event not found' });
 
-    if (event.organizer.toString() !== req.user.id && req.user.role !== 'admin') {
+    if (req.user.role !== 'organizer' && req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
