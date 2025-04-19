@@ -10,6 +10,18 @@ const getAllEvents = async (req, res) => {
   }
 };
 
+const getAllEventsAdmin = async (req, res) => {
+  try {
+    const events = await Event.find({});
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+    res.json(events);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching events', error: err.message });
+  }
+};
+
 // Public: Get single event details
 const getEventById = async (req, res) => {
   try {
@@ -117,6 +129,7 @@ const changeEventStatus = async (req, res) => {
 
 module.exports = {
   getAllEvents,
+  getAllEventsAdmin,
   getEventById,
   createEvent,
   updateEvent,
