@@ -7,6 +7,7 @@ const authorize = require("../Middleware/authorizationMiddleware");
 
 // Public routes
 router.get("/events", eventController.getAllEvents);
+router.get("/events/all",  authenticate, authorize(["admin"]), eventController.getAllEventsAdmin);
 router.get("/events/:id", eventController.getEventById);
 
 // Organizer routes
@@ -18,7 +19,5 @@ router.get("/users/events/analytics", authenticate, authorize(["organizer"]), ev
 // Admin route
 router.put("/events/:id/status", authenticate, authorize(["admin"]), eventController.changeEventStatus);
 
-//admin
-router.get("/events/all",  authenticate, authorize(["admin"]), eventController.getAllEventsAdmin);
 
 module.exports = router;
