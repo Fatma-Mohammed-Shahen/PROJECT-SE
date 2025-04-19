@@ -7,6 +7,7 @@ const authorize = require("../Middleware/authorizationMiddleware");
 
 // Public routes
 router.get("/events", eventController.getAllEvents);
+router.get('/events/all', eventController.getAllEvents); 
 router.get("/events/:id", eventController.getEventById);
 
 // Organizer routes
