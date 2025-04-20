@@ -8,8 +8,7 @@ const eventSchema = new Schema({
     location: String,
     category: String,
     image: String,
-    ticket_price: Number,
-    ticket_price: Number,
+    ticket_price :{type : Number},
     total_tickets: {
     type: Number,
     required: true,
