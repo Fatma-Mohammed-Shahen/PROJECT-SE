@@ -38,13 +38,14 @@ const createEvent = async (req, res) => {
   try {
     const event = await Event.create({
       ...req.body,
+      status: 'pending', // Force status to 'pending' regardless of what organizer sends
       remaining_tickets: req.body.total_tickets,
       organizer: req.user.id,
     });
     res.status(201).json(event);
   } catch (err) {
-    res.status(500).json({ message: 'Failed to create event', error: err.message });
-  }
+    res.status(500).json({ message: 'Failed to create event', error: err.message });
+  }
 };
 
 // Organizer: Update event (tickets, date, location)
