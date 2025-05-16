@@ -10,6 +10,18 @@ const getAllEvents = async (req, res) => {
   }
 };
 
+const getAllEventsAdmin = async (req, res) => {
+  try {
+    const events = await Event.find({});
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+    res.json(events);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching events', error: err.message });
+  }
+};
+
 // Public: Get single event details
 const getEventById = async (req, res) => {
   try {
@@ -26,13 +38,14 @@ const createEvent = async (req, res) => {
   try {
     const event = await Event.create({
       ...req.body,
+      status: 'pending', // Force status to 'pending' regardless of what organizer sends
       remaining_tickets: req.body.total_tickets,
       organizer: req.user.id,
     });
     res.status(201).json(event);
   } catch (err) {
-    res.status(500).json({ message: 'Failed to create event', error: err.message });
-  }
+    res.status(500).json({ message: 'Failed to create event', error: err.message });
+  }
 };
 
 // Organizer: Update event (tickets, date, location)
@@ -41,7 +54,7 @@ const updateEvent = async (req, res) => {
     const event = await Event.findById(req.params.id);
     if (!event) return res.status(404).json({ message: 'Event not found' });
 
-    if (event.organizer.toString() !== req.user.id && req.user.role !== 'admin') {
+    if (req.user.role !== 'organizer' && req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
@@ -68,7 +81,7 @@ const deleteEvent = async (req, res) => {
     const event = await Event.findById(req.params.id);
     if (!event) return res.status(404).json({ message: 'Event not found' });
 
-    if (event.organizer.toString() !== req.user.id && req.user.role !== 'admin') {
+    if (req.user.role !== 'organizer' && req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
@@ -117,6 +130,7 @@ const changeEventStatus = async (req, res) => {
 
 module.exports = {
   getAllEvents,
+  getAllEventsAdmin,
   getEventById,
   createEvent,
   updateEvent,
