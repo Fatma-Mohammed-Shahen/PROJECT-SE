@@ -5,10 +5,13 @@ const eventController = require("../Controllers/EventController");
 const authenticate = require("../Middleware/authenticationMiddleware");
 const authorize = require("../Middleware/authorizationMiddleware");
 
+
 // Public routes
 router.get("/events", eventController.getAllEvents);
 router.get("/events/all",  authenticate, authorize(["admin"]), eventController.getAllEventsAdmin);
 router.get("/events/:id", eventController.getEventById);
+router.get('/organizer', authenticate, authorize(["organizer"]), eventController.getOrganizerEvents);
+
 
 // Organizer routes
 router.post("/events", authenticate, authorize(["organizer"]), eventController.createEvent);
@@ -20,4 +23,4 @@ router.get("/users/events/analytics", authenticate, authorize(["organizer"]), ev
 router.put("/events/:id/status", authenticate, authorize(["admin"]), eventController.changeEventStatus);
 
 
-module.exports = router;
+module.exports = router;

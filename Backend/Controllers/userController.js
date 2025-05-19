@@ -107,6 +107,19 @@ const authController = {
     }
   },
 
+logout: async (req, res) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Logout failed", error: error.message });
+  }
+},
+
   //for bonus
   forgetPassword: async (req, res) => {
     const { email } = req.body;

@@ -128,6 +128,17 @@ const changeEventStatus = async (req, res) => {
   }
 };
 
+// Organizer: Get their own events (not just analytics)
+const getOrganizerEvents = async (req, res) => {
+  try {
+    const events = await Event.find({ organizer: req.user.id });
+    res.json(events);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to get your events', error: err.message });
+  }
+};
+
+
 module.exports = {
   getAllEvents,
   getAllEventsAdmin,
@@ -137,4 +148,6 @@ module.exports = {
   deleteEvent,
   getOrganizerAnalytics,
   changeEventStatus,
+  getOrganizerEvents,
 };
+
