@@ -5,6 +5,10 @@ import RegisterForm from "./components/RegisterForm";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import LogoutForm from "./components/LogoutForm"; // adjust path as needed
+import MyEvents from "./pages/My-Events";
+import EventForm from "./components/EventForm";
+
+
 
 
 import ProtectedRoute from "./auth/ProtectedRoutes";
@@ -33,7 +37,27 @@ function App() {
           {/* Index Route */}
           <Route index element={<Dashboard />} />
 
-        
+          {/* My Events Nested Routes */}
+          <Route path="my-events" element={<MyEvents />}></Route>
+
+          <Route
+          path="/my-events/new"
+          element={
+            <ProtectedRoute allowedRoles={["organizer"]}>
+                <EventForm />
+            </ProtectedRoute>
+          }
+        />
+
+          <Route
+          path="/my-events/:id/edit"
+          element={
+            <ProtectedRoute allowedRoles={["organizer"]}>
+                <EventForm />
+            </ProtectedRoute>
+          }
+        />
+
         </Route>
         <Route path="/unauthorized" element={<Unauthorized />} />
 
@@ -50,4 +74,4 @@ function App() {
   );
 }
 
-export default App;
+export default App;
