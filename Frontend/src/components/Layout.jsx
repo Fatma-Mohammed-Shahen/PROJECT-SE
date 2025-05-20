@@ -10,7 +10,7 @@ export default function Layout() {
         <h1 className="text-lg font-semibold">Online Event Ticketing System</h1>
         <nav className="space-x-4">
           <Link to="/"> Home_ </Link>
-          <Link to="/events"> Events_ </Link>
+          <Link to="/profile"> -view your profile- </Link>
           {user?.role === "organizer" && <Link to="/my-events"> My Events_</Link>}
           {user?.role === "organizer" && <Link to="/my-events/new"> Create Events_</Link>}
           {user?.role === "admin" && <Link to="/admin/events"> Admin Events_ </Link>}
