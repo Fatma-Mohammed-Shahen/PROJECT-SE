@@ -15,6 +15,10 @@ export default function Layout() {
           {user?.role === "organizer" && <Link to="/my-events/new"> Create Events_</Link>}
           {user?.role === "admin" && <Link to="/admin/events"> Admin Events_ </Link>}
           {user?.role === "admin" && <Link to="/admin/users"> User  Management_ </Link>}
+          {user?.role === "user" && <Link to="/bookings">My Bookings_</Link>}
+          
+
+
           <Link to="/logout" className="underline hover:text-red-200">-Logout-</Link>
           
         </nav>
