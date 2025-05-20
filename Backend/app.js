@@ -50,7 +50,7 @@ app.use("/api/v1", authRoutes);
 app.use("/api/v1", eventRoutes);
 
 //
-app.use(authenticationMiddleware);
+//app.use(authenticationMiddleware);
 //
 
 app.use("/api/v1", userRoutes);

@@ -16,6 +16,7 @@ const bookingController = {
 
   // Authenticated standard users can book tickets of an event
   createBooking: async (req, res) => {
+    console.log("Inside createBooking", req.body);
     try {
       const { eventId, ticketsBooked } = req.body;
       const event = await Event.findById(eventId);

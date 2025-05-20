@@ -1,52 +1,60 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const BookTicketForm = ({ eventId, availableTickets, ticketPrice }) => {
-  const [quantity, setQuantity] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [ticketsBooked, setTicketsBooked] = useState(1);
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-  const totalPrice = quantity * ticketPrice;
-
-  const handleBooking = async () => {
-    if (quantity < 1 || quantity > availableTickets) {
-      return toast.error("Invalid ticket quantity.");
-    }
-
-    setLoading(true);
+  const handleBook = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/api/v1/bookings", {
-        eventId,
-        ticketsBooked: quantity,
-      });
-
-      toast.success("Booking successful!");
-    } catch (err) {
-      toast.error(
-        err.response?.data?.message || "Failed to book tickets. Try again."
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/bookings",
+        {
+          eventId: eventId,
+          ticketsBooked: ticketsBooked,
+        },
+        { withCredentials: true }
       );
-    } finally {
-      setLoading(false);
+
+      setMessage(`Booking successful! Total Price: $${ticketsBooked * ticketPrice}`);
+
+      // Navigate to booking history after short delay
+      setTimeout(() => {
+        navigate("/bookings");
+      }, 2000);
+    } catch (error) {
+      setMessage(
+        "Booking failed: " + (error.response?.data.message || error.message)
+      );
     }
   };
 
   return (
-    <div className="book-ticket-form">
-      <h3>Book Tickets</h3>
+    <div>
       <label>
-        Quantity:
+        Tickets to Book:
         <input
           type="number"
-          value={quantity}
-          min={1}
+          min="1"
           max={availableTickets}
-          onChange={(e) => setQuantity(Number(e.target.value))}
+          value={ticketsBooked}
+          onChange={(e) => {
+            const val = Number(e.target.value);
+            if (val > availableTickets) {
+              setTicketsBooked(availableTickets);
+            } else if (val < 1) {
+              setTicketsBooked(1);
+            } else {
+              setTicketsBooked(val);
+            }
+          }}
         />
       </label>
-      <p>Total Price: ${totalPrice}</p>
-      <button onClick={handleBooking} disabled={loading}>
-        {loading ? "Booking..." : "Book"}
-      </button>
+      <p>Total Price: ${ticketsBooked * ticketPrice}</p>
+      <button onClick={handleBook}>Book</button>
+      {message && <p>{message}</p>}
     </div>
   );
 };

@@ -7,6 +7,7 @@ export default function UserBookingsPage() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showHistory, setShowHistory] = useState(false); // toggle between bookings & history
 
   useEffect(() => {
     async function fetchBookings() {
@@ -20,7 +21,7 @@ export default function UserBookingsPage() {
         }
 
         const data = await response.json();
-        setBookings(data.bookings); // adjust to your API's response shape
+        setBookings(data.bookings);
       } catch (err) {
         setError(err.message || "Something went wrong");
       } finally {
@@ -35,19 +36,60 @@ export default function UserBookingsPage() {
 
   if (loading) return <p>Loading bookings...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
-  if (bookings.length === 0) return <p>You have no bookings yet.</p>;
+
+  // Filter valid bookings only (excluding "Unknown Event")
+  const validBookings = bookings.filter(
+    (booking) => booking.eventName && booking.eventName !== "Unknown Event"
+  );
+
+  // Separate active and canceled bookings
+  const activeBookings = validBookings.filter((b) => b.status !== "canceled");
+  const canceledBookings = validBookings.filter((b) => b.status === "canceled");
+
+  const displayBookings = showHistory ? canceledBookings : activeBookings;
+
+  if (displayBookings.length === 0) {
+    return (
+      <div>
+        <h2 className="text-xl font-bold mb-4">
+          {showHistory ? "Booking History" : "My Bookings"}
+        </h2>
+        <p>{showHistory ? "No canceled bookings yet." : "You have no current bookings."}</p>
+        <div className="mt-4">
+          <button
+            onClick={() => setShowHistory(!showHistory)}
+            className="bg-blue-600 text-white px-4 py-2 rounded"
+          >
+            {showHistory ? "Back to My Bookings" : "View Booking History"}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4">My Bookings</h2>
+      <h2 className="text-xl font-bold mb-4">
+        {showHistory ? "Booking History" : "My Bookings"}
+      </h2>
+
+      <div className="mb-4">
+        <button
+          onClick={() => setShowHistory(!showHistory)}
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          {showHistory ? "Back to My Bookings" : "View Booking History"}
+        </button>
+      </div>
+
       <ul className="space-y-4">
-        {bookings.map((booking) => (
+        {displayBookings.map((booking) => (
           <li
             key={booking._id}
             className="border p-4 rounded shadow-sm hover:bg-gray-50"
           >
             <p>
-              <strong>Event:</strong> {booking.title || "Unknown Event"}
+              <strong>Event:</strong> {booking.eventName}
             </p>
             <p>
               <strong>Date:</strong>{" "}

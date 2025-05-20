@@ -15,7 +15,6 @@ const EventDetails = () => {
     const fetchEvent = async () => {
       try {
         const res = await axios.get(`http://localhost:5000/api/v1/events/${id}`);
-        //console.log('API Response:', res.data);  // << Add this line
         setEvent(res.data);
       } catch (error) {
         toast.error("Failed to load event details");
@@ -25,10 +24,13 @@ const EventDetails = () => {
     };
     fetchEvent();
   }, [id]);
-  
+
+  console.log("Rendering EventDetails", JSON.stringify(event, null, 2));
 
   if (loading) return <p>Loading event...</p>;
   if (!event) return <p>Event not found.</p>;
+
+  const remaining = Number(event.remaining_tickets);
 
   return (
     <div className="event-details">
@@ -36,14 +38,19 @@ const EventDetails = () => {
       <p><strong>Date:</strong> {event.date ? new Date(event.date).toLocaleString() : "Date not available"}</p>
       <p><strong>Location:</strong> {event.location || "Location not available"}</p>
       <p><strong>Price:</strong> ${Number(event.ticket_price) || "N/A"}</p>
-      <p><strong>Available Tickets:</strong> {event.remaining_tickets ?? "N/A"}</p>
 
+      {remaining === 0 ? (
+        <p style={{ color: "red" }}><strong>Status:</strong> Sold Out</p>
+      ) : remaining <= 5 ? (
+        <p style={{ color: "orange" }}><strong>Hurry!</strong> Only {remaining} tickets left</p>
+      ) : (
+        <p><strong>Available Tickets:</strong> {remaining}</p>
+      )}
 
-      {/* Only show booking form if standard user is logged in */}
-      {user?.role === "user" && (
+      {user?.role === "user" && remaining > 0 && (
         <BookTicketForm
           eventId={event._id}
-          availableTickets={event.remaining_tickets}
+          availableTickets={remaining}
           ticketPrice={event.ticket_price}
         />
       )}
