@@ -47,6 +47,7 @@ mongoose.connect(db_url)
 
 // Routes
 app.use("/api/v1", authRoutes);
+app.use("/api/v1", eventRoutes);
 
 //
 app.use(authenticationMiddleware);
@@ -54,7 +55,7 @@ app.use(authenticationMiddleware);
 
 app.use("/api/v1", userRoutes);
 app.use("/api/v1", bookingRoutes);
-app.use("/api/v1", eventRoutes);
+
 
 
 app.use(function (req, res, next) {

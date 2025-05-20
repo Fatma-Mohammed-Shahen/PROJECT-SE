@@ -53,6 +53,7 @@ const bookingController = {
       const booking = new Booking({
         user: req.user.id, // or _id depending on your decoded token
         event: eventId,
+        eventName: event.title,  // add event title here!
         ticketsBooked,
         totalPrice,
         status: "confirmed"
