@@ -1,10 +1,11 @@
-
 import { useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { FiUser, FiMail, FiLock, FiChevronDown } from "react-icons/fi";
+import { useNavigate } from "react-router-dom"; 
 
 export default function RegisterForm() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({ 
     name: "", 
     email: "", 
@@ -22,11 +23,17 @@ export default function RegisterForm() {
     try {
       await axios.post("http://localhost:5000/api/v1/register", form);
       setMessage({ 
-        text: "Registration successful! Please log in.", 
+        text: "Registration successful! Redirecting to login...", 
         type: "success" 
       });
       // Reset form on success
       setForm({ name: "", email: "", password: "", role: "user" });
+      
+      // Redirect after 1.5 seconds
+      setTimeout(() => {
+        navigate('/login'); // <-- This will redirect to login page
+      }, 1500);
+      
     } catch (err) {
       setMessage({ 
         text: err.response?.data?.message || "Registration failed. Please try again.", 
@@ -114,7 +121,7 @@ export default function RegisterForm() {
                   className="w-full pl-4 pr-10 py-3 border border-gray-300 rounded-lg appearance-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"
                 >
                   <option value="user">User</option>
-                  <option value="admin">Admin</option>
+                
                   <option value="organizer">Organizer</option>
                 </select>
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">

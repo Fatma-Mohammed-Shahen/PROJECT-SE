@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import { toast } from "react-toastify";
 
 export default function LoginForm() {
   const { login } = useAuth();
@@ -10,7 +11,11 @@ export default function LoginForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const success = await login(form);
-    if (success) navigate("/");
+    if (success) {
+      navigate("/");
+    } else {
+      toast.error("User not found. Email or password might be incorrect.");
+    }
   };
 
   return (
@@ -41,10 +46,23 @@ export default function LoginForm() {
         Login
       </button>
       <br/>
-      
+      <br/>
+      <p> already have an account? &nbsp;&nbsp;&nbsp;
       <button onClick={()=>navigate('/register')} className="bg-blue-600 text-white px-4 py-2 rounded">
         Register
       </button>
+      </p>
+      <br/>
+      <p> forgot your password? &nbsp;&nbsp;&nbsp;
+
+      <button
+        onClick={() => navigate("/forgot-password")}
+        type="button"
+        className="text-blue-600 underline mt-2"
+      >
+        Forgot Password?
+      </button> </p>
+
     </form>
   );
 }
