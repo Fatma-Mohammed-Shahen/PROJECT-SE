@@ -19,6 +19,10 @@ import AllEvents from "./pages/AllEvents"; // adjust path as needed
 
 import ProtectedRoute from "./auth/ProtectedRoutes";
 import Unauthorized from "./pages/Unauthorized";
+import EventAnalytics from "./pages/EventAnalytics"; // adjust path as needed
+import AdminEventsPage from "./pages/AdminEventsPage"; // Import the new page
+import AdminUsersPage from "./pages/AdminUsersPage";
+
 
 function App() {
   return (
@@ -78,6 +82,31 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/my-events/analytics"
+            element={
+              <ProtectedRoute allowedRoles={["organizer"]}>
+                <EventAnalytics />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+          path="/admin/events"
+          element={
+         <ProtectedRoute allowedRoles={["admin"]}>
+         <AdminEventsPage />
+         </ProtectedRoute>
+          }
+         />
+        <Route
+        path="/admin/users"
+        element={
+        <ProtectedRoute allowedRoles={["admin"]}>
+        <AdminUsersPage />
+        </ProtectedRoute>
+        }
+        />
+        
 
                   {/* Standard user routes */}
           <Route
