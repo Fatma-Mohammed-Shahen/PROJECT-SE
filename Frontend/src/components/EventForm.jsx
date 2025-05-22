@@ -7,8 +7,8 @@ const EventForm = () => {
     title: "",
     date: "",
     location: "",
-    total_tickets: 0,
-    price: 0,
+    total_tickets: null,
+    ticket_price: null,
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -30,7 +30,7 @@ const EventForm = () => {
             date: event.date ? event.date.substring(0, 10) : "",
             location: event.location || "",
             total_tickets: event.total_tickets || 0,
-            price: event.price || 0,
+            ticket_price: event.ticket_price || 0,
           });
         })
         .catch(() => {
@@ -82,9 +82,9 @@ const EventForm = () => {
         />
         <input
           type="number"
-          name="price"
+          name="ticket_price"
           placeholder="Ticket Price"
-          value={formData.price}
+          value={formData.ticket_price}
           onChange={handleChange}
           required
           disabled={isEditing} // Optional: make price uneditable
@@ -118,4 +118,4 @@ const EventForm = () => {
   );
 };
 
-export default EventForm;
+export default EventForm;
