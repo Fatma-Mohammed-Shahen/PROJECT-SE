@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
@@ -48,70 +49,49 @@ export default function UserBookingsPage() {
 
   const displayBookings = showHistory ? canceledBookings : activeBookings;
 
-  if (displayBookings.length === 0) {
-    return (
-      <div>
-        <h2 className="text-xl font-bold mb-4">
-          {showHistory ? "Booking History" : "My Bookings"}
-        </h2>
-        <p>{showHistory ? "No canceled bookings yet." : "You have no current bookings."}</p>
-        <div className="mt-4">
-          <button
-            onClick={() => setShowHistory(!showHistory)}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            {showHistory ? "Back to My Bookings" : "View Booking History"}
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <h2 className="text-xl font-bold mb-4">
-        {showHistory ? "Booking History" : "My Bookings"}
-      </h2>
+    <div className="user-bookings-page">
+      <h2 className="title">{showHistory ? "Booking History" : "My Bookings"}</h2>
 
-      <div className="mb-4">
-        <button
-          onClick={() => setShowHistory(!showHistory)}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
+      <div className="button-wrapper">
+        <button onClick={() => setShowHistory(!showHistory)}>
           {showHistory ? "Back to My Bookings" : "View Booking History"}
         </button>
       </div>
 
-      <ul className="space-y-4">
-        {displayBookings.map((booking) => (
-          <li
-            key={booking._id}
-            className="border p-4 rounded shadow-sm hover:bg-gray-50"
-          >
-            <p>
-              <strong>Event:</strong> {booking.eventName}
-            </p>
-            <p>
-              <strong>Date:</strong>{" "}
-              {booking.createdAt
-                ? new Date(booking.createdAt).toLocaleDateString()
-                : "N/A"}
-            </p>
-            <p>
-              <strong>Tickets:</strong> {booking.ticketsBooked || 0}
-            </p>
-            <p><strong>Total Price:</strong> ${booking.totalPrice}</p>
-            <p><strong>Status:</strong> {booking.status}</p>
+      {displayBookings.length === 0 ? (
+        <p>{showHistory ? "No canceled bookings yet." : "You have no current bookings."}</p>
+      ) : (
+        <ul>
+          {displayBookings.map((booking) => (
+            <li key={booking._id}>
+              <p><strong>Event:</strong> {booking.eventName}</p>
+              <p>
+                <strong>Date:</strong>{" "}
+                {booking.createdAt
+                  ? new Date(booking.createdAt).toLocaleDateString()
+                  : "N/A"}
+              </p>
+              <p><strong>Tickets:</strong> {booking.ticketsBooked || 0}</p>
+              <p><strong>Total Price:</strong> ${booking.totalPrice}</p>
+              <p>
+                <strong>Status:</strong>{" "}
+                <span className={booking.status === "confirmed" ? "status-confirmed" : "status-canceled"}>
+                  {booking.status}
+                </span>
+              </p>
 
-            <Link
-              to={`/bookings/${booking._id}`}
-              className="text-blue-600 underline hover:text-blue-800"
-            >
-              View Booking
-            </Link>
-          </li>
-        ))}
-      </ul>
+
+              <Link
+                to={`/bookings/${booking._id}`}
+                className="view-link"
+              >
+                View Booking
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
