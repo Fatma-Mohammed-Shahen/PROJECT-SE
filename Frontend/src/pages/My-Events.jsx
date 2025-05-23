@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
 import axios from "../services/api";
+
+
 
 const MyEventsPage = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [deleteError, setDeleteError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMyEvents = async () => {
@@ -45,6 +48,9 @@ const MyEventsPage = () => {
   return (
     <div>
       <h2>My Events</h2>
+      <button onClick={() => navigate("/my-events/analytics")}>
+      View Analytics
+      </button>
       {deleteError && <p style={{ color: "red" }}>{deleteError}</p>}
       {events.length === 0 ? (
         <p>You haven't created any events yet.</p>
