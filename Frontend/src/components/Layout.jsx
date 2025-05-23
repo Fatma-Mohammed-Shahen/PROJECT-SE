@@ -1,3 +1,4 @@
+
 import { Link, Outlet } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 
@@ -9,17 +10,17 @@ export default function Layout() {
       <header className="bg-blue-600 text-white p-4 flex justify-between">
         <h1 className="text-lg font-semibold">Online Event Ticketing System</h1>
         <nav className="space-x-4">
-          <Link to="/"> Home_ </Link>
-          <Link to="/profile"> -view your profile- </Link>
-          {user?.role === "organizer" && <Link to="/my-events"> My Events_</Link>}
-          {user?.role === "organizer" && <Link to="/my-events/new"> Create Events_</Link>}
-          {user?.role === "admin" && <Link to="/admin/events"> Admin Events_ </Link>}
-          {user?.role === "admin" && <Link to="/admin/users"> User  Management_ </Link>}
-          {user?.role === "user" && <Link to="/bookings">My Bookings_</Link>}
+          <Link to="/"> Home </Link>
+          <Link to="/profile"> View your profile </Link>
+          {user?.role === "organizer" && <Link to="/my-events"> My Events</Link>}
+          {user?.role === "organizer" && <Link to="/my-events/new"> Create Events</Link>}
+          {user?.role === "admin" && <Link to="/admin/events"> Admin Events</Link>}
+          {user?.role === "admin" && <Link to="/admin/users"> User  Management </Link>}
+          {user?.role === "user" && <Link to="/bookings">My Bookings</Link>}
           
 
 
-          <Link to="/logout" className="underline hover:text-red-200">-Logout-</Link>
+          <Link to="/logout" className="underline hover:text-red-200">Logout</Link>
           
         </nav>
       </header>

@@ -1,42 +1,129 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+app.css
+
+
+/* Universal box-sizing to include padding/borders in width */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* UserBookingsPage container */
+.user-bookings-page {
+  display: block; /* override body grid centering */
+  margin: 2rem auto;
+  max-width: none;      /* no max-width to allow fixed width */
+  width: 1200px;        /* fixed width on large screens */
+  padding: 1rem 2rem;
+  text-align: left;
+  color: rgba(255, 255, 255, 0.9);
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  overflow-wrap: break-word; /* break long words to avoid overflow */
+}
+
+/* Title styling */
+.user-bookings-page .title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #646cff;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Button wrapper */
+.user-bookings-page .button-wrapper {
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Button style */
+.user-bookings-page button {
+  background-color: #646cff;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.user-bookings-page button:hover {
+  background-color: #535bf2;
+}
+
+/* Booking list grid */
+.user-bookings-page ul {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+/* Booking list items */
+.user-bookings-page li {
+  background: #2a2a2a;
+  border-radius: 10px;
+  padding: 1.2rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  transition: background-color 0.3s ease;
+  word-wrap: break-word;
+}
+
+.user-bookings-page li:hover {
+  background: #3c3c3c;
+}
+
+.user-bookings-page li p {
+  margin: 0.3rem 0;
+}
+
+/* View link style */
+.user-bookings-page .view-link {
+  display: inline-block;
+  margin-top: 0.8rem;
+  color: #646cff;
+  font-weight: 600;
+  text-decoration: underline;
+  transition: color 0.25s ease;
+}
+
+.user-bookings-page .view-link:hover {
+  color: #535bf2;
+}
+
+/* Responsive: switch container width and grid columns below 900px */
+@media (max-width: 900px) {
+  .user-bookings-page {
+    width: 95%;           /* fluid width */
+    padding: 1rem;        /* reduce padding */
   }
-  to {
-    transform: rotate(360deg);
+  .user-bookings-page ul {
+    grid-template-columns: 1fr; /* one column */
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Navigation styles */
+nav {
+  display: flex;
+  padding: 2% 6%;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.card {
-  padding: 2em;
+.status-confirmed {
+  color: #4caf50; /* green */
+  font-weight: bold;
 }
 
-.read-the-docs {
-  color: #888;
+.status-canceled {
+  color: #f44336; /* red */
+  font-weight: bold;
 }
+
