@@ -1,8 +1,8 @@
-// components/LogoutForm.jsx
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const LogoutForm = () => {
   const { setUser } = useAuth();
@@ -15,10 +15,12 @@ const LogoutForm = () => {
           withCredentials: true,
         });
         setUser(null);
+        toast.success("You have been logged out.");
         navigate("/login");
       } catch (error) {
         console.error("Logout failed:", error.response?.data || error.message);
-        navigate("/login"); // Still redirect to login
+        toast.error("Logout failed. Please try again.");
+        navigate("/login");
       }
     };
 

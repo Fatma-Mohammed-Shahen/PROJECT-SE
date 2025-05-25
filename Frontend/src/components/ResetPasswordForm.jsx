@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // ← Add this
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function ResetPasswordForm() {
   const [form, setForm] = useState({
@@ -8,17 +9,17 @@ export default function ResetPasswordForm() {
     otp: "",
     newPassword: "",
   });
-  const [message, setMessage] = useState("");
 
-  const navigate = useNavigate(); // ← Hook for navigation
+  const navigate = useNavigate();
 
   const handleReset = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.put("http://localhost:5000/api/v1/resetPasswordWithOtp", form);
-      setMessage(res.data.message);
+      toast.success(res.data.message || "Password reset successfully.");
+      setTimeout(() => navigate("/login"), 1500);
     } catch (error) {
-      setMessage(error.response?.data?.message || "Error resetting password");
+      toast.error(error.response?.data?.message || "Error resetting password.");
     }
   };
 
@@ -32,6 +33,7 @@ export default function ResetPasswordForm() {
         className="border p-2 w-full"
         value={form.email}
         onChange={(e) => setForm({ ...form, email: e.target.value })}
+        required
       />
       <input
         type="text"
@@ -39,6 +41,7 @@ export default function ResetPasswordForm() {
         className="border p-2 w-full"
         value={form.otp}
         onChange={(e) => setForm({ ...form, otp: e.target.value })}
+        required
       />
       <input
         type="password"
@@ -46,6 +49,7 @@ export default function ResetPasswordForm() {
         className="border p-2 w-full"
         value={form.newPassword}
         onChange={(e) => setForm({ ...form, newPassword: e.target.value })}
+        required
       />
 
       <div className="flex gap-2">
@@ -63,8 +67,6 @@ export default function ResetPasswordForm() {
           Back to Login
         </button>
       </div>
-
-      {message && <p className="text-red-600">{message}</p>}
     </form>
   );
 }
