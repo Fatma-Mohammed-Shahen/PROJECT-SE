@@ -3,6 +3,8 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { FiUser, FiMail, FiLock, FiChevronDown } from "react-icons/fi";
 import { useNavigate } from "react-router-dom"; 
+import { toast } from "react-toastify";
+
 
 export default function RegisterForm() {
   const navigate = useNavigate();
@@ -15,34 +17,30 @@ export default function RegisterForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setMessage({ text: "", type: "" });
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+  
+  try {
+    await axios.post("http://localhost:5000/api/v1/register", form);
+    toast.success("Registration successful! Redirecting to login...");
     
-    try {
-      await axios.post("http://localhost:5000/api/v1/register", form);
-      setMessage({ 
-        text: "Registration successful! Redirecting to login...", 
-        type: "success" 
-      });
-      // Reset form on success
-      setForm({ name: "", email: "", password: "", role: "user" });
-      
-      // Redirect after 1.5 seconds
-      setTimeout(() => {
-        navigate('/login'); // <-- This will redirect to login page
-      }, 1500);
-      
-    } catch (err) {
-      setMessage({ 
-        text: err.response?.data?.message || "Registration failed. Please try again.", 
-        type: "error" 
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    // Reset form
+    setForm({ name: "", email: "", password: "", role: "user" });
+
+    setTimeout(() => {
+      navigate('/login');
+    }, 1500);
+    
+  } catch (err) {
+    toast.error(
+      err.response?.data?.message || "Registration failed. Please try again."
+    );
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">

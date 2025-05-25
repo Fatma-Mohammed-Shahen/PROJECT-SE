@@ -1,6 +1,7 @@
 
 import { Link, Outlet } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import Footer from "../components/Footer";
 
 export default function Layout() {
   const { user, logout } = useAuth();
@@ -27,7 +28,7 @@ export default function Layout() {
       <main className="flex-1 p-4">
         <Outlet />
       </main>
-      
+      <Footer />
     </div>
   );
 }

@@ -12,6 +12,7 @@ export default function LoginForm() {
     e.preventDefault();
     const success = await login(form);
     if (success) {
+      toast.success("Login successful!");
       navigate("/");
     } else {
       toast.error("User not found. Email or password might be incorrect.");
@@ -47,8 +48,8 @@ export default function LoginForm() {
       </button>
       <br/>
       <br/>
-      <p> already have an account? &nbsp;&nbsp;&nbsp;
-      <button onClick={()=>navigate('/register')} className="bg-blue-600 text-white px-4 py-2 rounded">
+      <p> don't have an account? &nbsp;&nbsp;&nbsp;
+      <button type="button" onClick={()=>navigate('/register')} className="bg-blue-600 text-white px-4 py-2 rounded">
         Register
       </button>
       </p>
