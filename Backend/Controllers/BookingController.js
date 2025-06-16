@@ -117,7 +117,7 @@ const bookingController = {
       }
   
       const event = await Event.findById(booking.event);
-      event.availableTickets += booking.ticketsBooked;  // Refund tickets
+      event.remaining_tickets += booking.ticketsBooked;  // Refund tickets
       await event.save();
   
       booking.status = "canceled";  // Update booking status
